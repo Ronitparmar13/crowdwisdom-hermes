@@ -1,0 +1,146 @@
+{
+  "title": "Who's Right?",
+  "tagline": "Every expert disagrees. The crowd already knows.",
+  "project": "CrowdWisdom Trading",
+  "asset_type": "cinematic video ad (vertical 9:16, mutable scans to 16:9)",
+  "total_duration_seconds": 42,
+  "concept_overview": "A 42-second cinematic spot that opens on a brutal montage of talking-head pundits each shouting a different market call (Buy! Sell! Crash! To the moon!). The emotional undertone is the silent crisis of the modern solo retail trader: more information than ever, but no closer to a decision, glued to screens at 1am while conflicting signals pull them apart. The turn exposes the truth that moves markets is not any one oracle but the crowd itself, and CrowdWisdom is the only tool that converts that crowd into one clear, auditable decision: entry, stop, target. Ends on a clean brand card and a low-friction free-trial CTA. Creative premise is distinct from our prior 'You're Not Guessing Alone' spot (solo-trader + signal fatigue): this one leads with expert-conflict and the measurable contagion of decision paralysis, anchored to a live sentiment extreme.",
+  "ad_channel": "Meta feed / Reels / TikTok / YouTube Shorts — sound-on-first-2s, subtitles burned in at all times",
+  "created_at": "2026-09-16",
+  "research_window": "last 30 days (Aug 16 - Sep 16, 2026)",
+  "ideal_customer_profile": {
+    "who": "Jess, 34, self-directed retail trader (equities + options), 3-6 years in the market, trades nights/weekends around a day job.",
+    "frustration": "Subscribed to 3 research tools (a charting platform, an analyst-rating feed, an options-education newsletter) and a paid Telegram signal group. Still starts Monday without a clear position. Sleepless nights reconciling contradicting outlooks; has overtraded out of boredom and chased pumps out of FOMO.",
+    "what_they_already_believe": "That real money is made by 'knowing something others don't', so they keep hoarding more data. They have not yet realized the edge is collective consensus, not more data.",
+    "why_now": "September volatility + a record bearish-reading spike (see pain_point source) has spiked their anxiety and search activity, making them unusually receptive to a trustworthy alternative to their current signal sources.",
+    "note": "Mirrors the audience actively targeted by the competitor ads in ads.json (paid-signal fatigue, chart-literacy education, free-course lead-gen)."
+  },
+  "key_pain_point": {
+    "problem": "Information overload plus directly contradicting expert opinions cause decision paralysis and cognitive overload in solo retail traders — the more they consume, the less decisive they become.",
+    "why_this_is_strongest": "It is the pain every competitor in ads.json gestures at but none solves head-on: Quant AI sells a single black-box AI analysis (no track record), Options 101 sells education (a class, not a decision), and the Vietnamese course page sells more information and weekly stock picks (more data). CrowdWisdom is the only offering whose core mechanism — accuracy-weighted consensus from thousands of verified professionals with a public, auditable outcomes page — is a direct remedy. It recasts overload into one decision.",
+    "source_and_reasoning": [
+      {
+        "type": "Live sentiment extreme (30-day window)",
+        "detail": "AAII Investor Sentiment Survey: Bearish sentiment hit a 1-Year Bearish High of 66.7% in the week ending 9/10/2026, with Neutral at a record-low ~22-23% — retail investors are abruptly, and contradictorily, polarized."
+      },
+      {
+        "type": "Behavioral channel",
+        "detail": "Finance Magnates ('How AI Overload Affects Retail Traders' Behaviour, Decisions, and Churn') and Global Banking & Finance Review ('The Silent Crisis in Modern Trading: Why More Information Is Not Making Traders Smarter', 2026): overwhelming stimulation impairs decision-making; cognitive overload drives emotional fatigue, overtrading, and impulsive decisions. This is the 'silent crisis' the spot dramatizes."
+      },
+      {
+        "type": "Direct customer language",
+        "detail": "CrowdWisdom founder (Gilad Bar-Ilan, Medium, 2026): active traders say 'I'm paying for TipRanks, Seeking Alpha, and Investing.com and I still don't know what the difference is between them.' Tools deliver information, not decisions. Quote: 'You don't need more data. You need the collective signal of the world's best traders, distilled and delivered as a ready-to-execute decision.'"
+      },
+      {
+        "type": "Competitive gap from ads.json (Meta Ad Library, last 30 days)",
+        "detail": "Quant AI ad copy: 'You need clarity, not guesswork' — admits the pain, but sells screenshot-to-AI analysis with no public track record. The high-engagement Options 101 (5.5k page likes) sells chart-reading education. CrowdWisdom's transparent, accuracy-weighted consensus + audited outcomes on a public predictions page is the unclaimed high ground."
+      }
+    ]
+  },
+  "visual_hook": {
+    "scene": 1,
+    "description": "A blender-speed montage of faceless pundits in broadcast boxes, each shouting a different verdict in under 4 seconds: a green 'BUY' card, a red 'SELL' card, a headline 'CRASH IMMINENT', then 'TO THE MOON'. Rapid smash-cuts, raised-desk feel, handheld shake, then ONE beat of dead silence as the last card snaps to 'WHO'S RIGHT?' centered on a dark screen."
+  },
+  "scenes": [
+    {
+      "scene_number": 1,
+      "timestamp": "0:00-0:04",
+      "duration_seconds": 4,
+      "purpose": "VISUAL HOOK - expert conflict in 4 seconds",
+      "camera": "Handheld shake, 0.6s cuts between broadcast boxes; whip-pan into a hard cut to black",
+      "visual": "Rapid-fire montage: three/four talking-head pundit boxes, each throwing a contradictory prediction card at camera (BUY / SELL / CRASH IMMINENT / TO THE MOON). Noise alerts chirp. Last beat: pure black, title card slams in.",
+      "voiceover": "(none - sound design hook)",
+      "on_screen_text": "BUY ▲ / SELL ▼ / CRASH IMMINENT! / TO THE MOON 🚀 — then centered: WHO'S RIGHT?",
+      "sound_design": "Stabbing synth stabs + alert pings, then abrupt digital dropout to dead silence"
+    },
+    {
+      "scene_number": 2,
+      "timestamp": "0:04-0:11",
+      "duration_seconds": 7,
+      "purpose": "PROBLEM - the silent crisis: overload, not opportunity",
+      "camera": "Slow push-in on subject, shallow depth of field, cold blue-grey grade",
+      "visual": "Low-lit 1am scene. A solo trader (the ICP) hunched at a desk; three monitors full of charts, a news ticker, a Discord/Telegram feed lighting up. Their face is lit by the blue glow, eyes darting, mug of cold coffee, tension headache. Cutaway on their phone: 14 stacked unread alerts.",
+      "voiceover": "They told you the problem was finding information. It isn't. You drown in it. Every expert disagrees today, and every one of them sounds sure.",
+      "on_screen_text": "3 research tools • 1 signal group • 0 decisions",
+      "sound_design": "Low drone + phone ping spiral, a heartbeat building"
+    },
+    {
+      "scene_number": 3,
+      "timestamp": "0:11-0:18",
+      "duration_seconds": 7,
+      "purpose": "THE TRUTH - the market is a crowd, not an oracle",
+      "camera": "Pull back, camera floats up out of the small room to a wide abstract data-shot",
+      "visual": "Ascend from the trader's screens into an abstract visual: thousands of tiny trader avatars/light-particles orbiting a glowing price ticker (the 'crowd'). A line fills showing Bearish at 66.7% (record 1-year high, week of 9/10) while a bar of Bullish sits opposite. Two pundit AVATARS pop in and shout, then fade — their noise is already inside the crowd's movement.",
+      "voiceover": "The single smartest opinion you'll find is still one opinion. But the market, it moves at the speed of a crowd. 66.7% of retail is suddenly bearish — you can feel that panic in the ticker. The ones winning are reading the whole crowd, not one loud voice.",
+      "on_screen_text": "BEARISH 66.7% — 1-YR HIGH (AAII, wk of 9/10) • 'One opinion < the crowd'",
+      "sound_design": "Warm rising swell replaces the drone; audio tension releases"
+    },
+    {
+      "scene_number": 4,
+      "timestamp": "0:18-0:27",
+      "duration_seconds": 9,
+      "purpose": "SOLUTION - CrowdWisdom turns the crowd into one decision",
+      "camera": "Locked frame, product UI as hero, clean white/slate smartphone mock on a desk",
+      "visual": "Product reveal: CrowdWisdom UI. A single 'Consensus Card' slides up — the weekly market briefing synthesized by AI agents from thousands of verified professional traders (2,000+), each forecast WEIGHTED BY HISTORICAL ACCURACY (bad callers weighted down, proven callers up). One card: ENTRY / STOP / TARGET. Behind it, a scrollable public track record page: logged forecast → outcome, with a 73.8% tracked success badge.",
+      "voiceover": "What you actually need isn't more opinions. It's the crowd's best signal. CrowdWisdom aggregates thousands of verified professionals, weights each view by how accurate they've actually been, and hands you one card: entry, stop, target. Every call publicly logged. You can check every single one of us.",
+      "on_screen_text": "2,000+ verified traders • Weighted by accuracy • ENTRY / STOP / TARGET • Track record: 73.8% logged",
+      "sound_design": "Tactile UI clicks, confident resolved chord"
+    },
+    {
+      "scene_number": 5,
+      "timestamp": "0:27-0:34",
+      "duration_seconds": 7,
+      "purpose": "BENEFIT - start the week with a decision, not a research project",
+      "camera": "Medium-wide, warm morning light, slow dolly into the now-calm subject",
+      "visual": "Same trader, next morning — day-bright kitchen, one laptop, coffee. They look at the single CrowdWisdom consensus card, set the trade with calm confidence, press enter. The second monitor is powered off. A corner badge reads 'Decision in hand: 8 minutes'. Contrast cutaway: the 1am chaos is dimly replaying in flashback.",
+      "voiceover": "Monday morning, you stop running a research project and start making trades. Clarity, not guesswork. A decision you can actually defend.",
+      "on_screen_text": "From 3-hour research … to one decision.",
+      "sound_design": "Brighter, beat drops in with quiet confidence"
+    },
+    {
+      "scene_number": 6,
+      "timestamp": "0:34-0:39",
+      "duration_seconds": 5,
+      "purpose": "PROOF - you're not betting on one person anymore",
+      "camera": "Slow orbit around a hologram-style crowd glyph",
+      "visual": "The individual trader now floats, connected, at the center of the light-particle crowd from Scene 3 — they are a node among thousands, all sharing the same filtered signal. On-screen social proof ticker: 'What 2,000+ professionals are seeing that you aren't.'",
+      "voiceover": "The professionals aren't seeing more data than you. They're just reading the crowd. Now you can too.",
+      "on_screen_text": "Join the collective • What 2,000+ pros are already seeing",
+      "sound_design": "Full, warm, swelling anthem"
+    },
+    {
+      "scene_number": 7,
+      "timestamp": "0:39-0:42",
+      "duration_seconds": 3,
+      "purpose": "CTA - low-friction offer card",
+      "camera": "Static brand card",
+      "visual": "CrowdWisdom logo, product shot of the Consensus Card, on-brand color. Clean CTA button and offer line.",
+      "voiceover": "Stop trading blind. Start your free week briefing — no card required.",
+      "on_screen_text": "CrowdWisdom • FREE weekly briefing — no credit card • CTA BUTTON: 'Get My First Decision'",
+      "sound_design": "Resolved final chord, logo whoosh"
+    }
+  ],
+  "vo_script_full": [
+    "They told you the problem was finding information. It isn't. You drown in it. Every expert disagrees today, and every one of them sounds sure.",
+    "The single smartest opinion you'll find is still one opinion. But the market moves at the speed of a crowd. 66.7% of retail is suddenly bearish — you can feel that panic in the ticker. The ones winning are reading the whole crowd, not one loud voice.",
+    "What you actually need isn't more opinions. It's the crowd's best signal. CrowdWisdom aggregates thousands of verified professionals, weights each view by how accurate they've actually been, and hands you one card: entry, stop, target. Every call publicly logged. You can check every single one of us.",
+    "Monday morning, you stop running a research project and start making trades. Clarity, not guesswork. A decision you can actually defend.",
+    "The professionals aren't seeing more data than you. They're just reading the crowd. Now you can too.",
+    "Stop trading blind. Start your free week briefing — no card required."
+  ],
+  "cta": {
+    "type": "Free-trial signup",
+    "button_text": "Get My First Decision",
+    "offer": "Free weekly market briefing — no credit card required",
+    "landing": "crowdwisdomtrading.com (sign-up flow)",
+    "frequency_hippie_free_clause": true
+  },
+  "sound_design_notes": "Scene 1: stabs/pings then digital dropout. Scene 2: low drone + heartbeat under cold blue grade. Scenes 3-6: tension release into warm resolve, one continuous musical build to the CTA. VO: calm, credible, deliberate — a plain-spoken peer, NOT a hype-man. Pace keeps every VO line under ~9 words/sec so burned-in subtitles stay readable on mobile.",
+  "creative_differentiation_note": "Distinct from prior 'You're Not Guessing Alone' spot: that concept led with solo-trader loneliness and paid-signal fatigue; this one leads with expert-conflict and decision paralysis, and is anchored to a live, citable market event (AAII 66.7% bearish 1-yr high, wk of 9/10/2026) so the ad feels topical within the 30-day content window.",
+  "production_notes": [
+    "ON-SCREEN STAT: '66.7% bearish' and '73.8% track record' must be re-verified against the live AAII survey snapshot and the CrowdWisdom predictions page immediately before render; swap in audited figures if shifting.",
+    "Risk clause: on-screen disclaimer 'Trading involves substantial risk. Not investment advice.' required by ad-policy; place bottom of final card and product scenes.",
+    "Shoot/grade: two lighting states (cold blue 1am / warm morning) to dramatize the arc; avatar/pundit boxes can be CGI or stock to avoid real faces.",
+    "Vertical 9:16 primary (Reels/TikTok/Shorts); prep a 16:9 cut for in-feed; keep all text within the mobile safe zone (center 2/3)."
+  ]
+}
