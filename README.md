@@ -1,160 +1,290 @@
-# CrowdWisdom Trading — Hermes AI Marketing Agents
 
-A multi-agent AI marketing pipeline built with **Hermes Agent** for the CrowdWisdom Trading internship assessment.
+# CrowdWisdom Trading — Hermes AI Marketing Agent Team
 
-The system researches competing trading advertisements, identifies audience pain points, creates a cinematic video-ad storyboard, and generates the final advertisement.
+A multi-agent AI marketing pipeline built for the CrowdWisdom Trading internship assessment. It combines competitor-ad research, audience research, creative scripting, and video production.
+
+**Final creative:** “Who’s Right?” — a 42-second advertisement delivered in vertical (9:16) and landscape (16:9) formats.
+
+> The final advertisement uses an Atelier-style motion-graphics composition rendered with OpenMontage + HyperFrames. It is not presented as AI-generated live-action footage.
 
 ---
 
-## Project Overview
+## Table of Contents
+
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Creative Concept](#creative-concept)
+- [Technology Stack](#technology-stack)
+- [Repository Structure](#repository-structure)
+- [Installation](#installation)
+- [Hermes Setup](#hermes-setup)
+- [Ads Manager Agent](#ads-manager-agent)
+- [Script Agent](#script-agent)
+- [OpenMontage and HyperFrames Video Pipeline](#openmontage-and-hyperframes-video-pipeline)
+- [Validation](#validation)
+- [Final Deliverables](#final-deliverables)
+- [Assessment Alignment](#assessment-alignment)
+- [Security](#security)
+- [Author](#author)
+
+---
+
+## Overview
+
+This project implements a three-stage marketing workflow using Hermes Agent.
 
 ```text
-                    ┌─────────────────────┐
-                    │   Hermes Kanban     │
-                    │    Orchestrator     │
-                    └──────────┬──────────┘
-                               │
-              ┌────────────────┼────────────────┐
-              │                │                │
-              ▼                ▼                ▼
-      ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-      │ Ads Manager  │  │ Script Agent │  │ Video Agent  │
-      │    Agent     │  │              │  │              │
-      └──────┬───────┘  └──────┬───────┘  └──────┬───────┘
-             │                 │                 │
-             ▼                 ▼                 ▼
-        Apify Ads         Tavily Research    Video Pipeline
-             │                 │                 │
-             ▼                 ▼                 ▼
-      data/ads.json      storyboard.json    final_ad.mp4
+                 Hermes Agent / Kanban
+                         |
+          +--------------+--------------+
+          |              |              |
+          v              v              v
+     Ads Manager     Script Agent   Video Pipeline
+          |              |              |
+        Apify          Tavily       OpenMontage
+          |              |          + HyperFrames
+          v              v              v
+   data/ads.json  data/storyboard.json  output/*.mp4
 ```
 
-### Workflow
+### 1. Ads Manager Agent
 
-1. **Ads Manager Agent**
-   - Collects and analyzes trading advertisements.
-   - Uses Apify for Meta Ads Library research.
-   - Filters relevant advertisements from the recent research window.
-   - Extracts hooks, pain points, marketing concepts, and competitive patterns.
-   - Saves the structured analysis to `data/ads.json`.
+The Ads Manager researches competitor advertisements and extracts marketing insights.
 
-2. **Script Agent**
-   - Reads the Ads Manager output.
-   - Uses Tavily for recent trading-market and audience research.
-   - Identifies the ideal customer profile and key pain point.
-   - Creates a 30–60 second cinematic advertising storyboard.
-   - Saves the storyboard to `data/storyboard.json`.
+- Collects Meta Ads Library data through Apify.
+- Filters advertisements for trading relevance.
+- Filters the research set to the recent 30-day window.
+- Removes duplicate advertisements.
+- Selects candidate advertisements for analysis.
+- Uses an LLM to extract hooks, pain points, target audiences, marketing angles, creative concepts, CTAs, and observed weaknesses.
+- Stores raw records in `data/raw_ads.json`.
+- Saves structured analysis in `data/ads.json`.
 
-3. **Video Agent**
-   - Reads the approved storyboard.
-   - Generates the cinematic scenes and compositions.
-   - Adds captions, motion effects, and voiceover.
-   - Uses MoviePy, Pillow, NumPy, and FFmpeg.
-   - Produces the final advertisement at `data/final_ad.mp4`.
+The candidate selection is based on available Ads Library signals. It should not be interpreted as verified conversion, revenue, or profitability data.
+
+### 2. Script Agent
+
+The Script Agent transforms research into an advertising concept.
+
+- Uses `data/ads.json` as competitive context.
+- Uses Tavily for recent trading-market and audience research.
+- Identifies the target audience, customer pain point, and creative angle.
+- Develops the scene sequence, voiceover, on-screen copy, CTA, and production notes.
+- Saves the structured storyboard to `data/storyboard.json`.
+
+### 3. Video Pipeline
+
+The final production stage uses OpenMontage with HyperFrames.
+
+- Builds separate native vertical and landscape compositions.
+- Uses an Atelier-style HTML composition.
+- Adds animated typography, transitions, graphics, and narration.
+- Checks and previews the compositions using HyperFrames.
+- Renders the final MP4 files.
+- Uses FFmpeg for media processing and encoding.
+
+The final renders are stored in the repository's `output/` directory.
+
+> `agents/video_agent.py` is retained as the earlier procedural video-agent implementation/prototype. The final assessment videos listed in this README were rendered through OpenMontage + HyperFrames.
 
 ---
 
-## Technologies
+## Architecture
+
+```text
+                         +----------------------+
+                         |     Hermes Agent     |
+                         |  Kanban / Profiles   |
+                         +----------+-----------+
+                                    |
+              +---------------------+---------------------+
+              |                     |                     |
+              v                     v                     v
+      +---------------+     +---------------+     +----------------+
+      | Ads Manager   |     | Script Agent  |     | Video Pipeline |
+      | Agent         |     |               |     |                |
+      +-------+-------+     +-------+-------+     +-------+--------+
+              |                     |                     |
+              v                     v                     v
+            Apify                 Tavily          OpenMontage /
+              |                     |               HyperFrames
+              v                     v                     |
+       data/ads.json       data/storyboard.json            v
+                                                   output/*.mp4
+```
+
+---
+
+## Creative Concept
+
+# “Who’s Right?”
+
+**Tagline:** “Every expert disagrees. The crowd already knows.”
+
+The advertisement begins with conflicting trading opinions and information overload. It then transitions into a visual representation of crowd sentiment, a CrowdWisdom product reveal, and a final call to action.
+
+### Creative Arc
+
+```text
+Conflicting opinions
+        |
+        v
+Information overload
+        |
+        v
+Decision paralysis
+        |
+        v
+Wisdom of the crowd
+        |
+        v
+CrowdWisdom product reveal
+        |
+        v
+Decision clarity
+        |
+        v
+Final CTA
+```
+
+### Seven-Scene Structure
+
+| Scene | Purpose |
+|---|---|
+| 1 | Contradictory market opinions |
+| 2 | Retail-trader information overload |
+| 3 | Crowd and sentiment visualization |
+| 4 | CrowdWisdom product reveal |
+| 5 | Resolution and decision clarity |
+| 6 | Collective signal / network visualization |
+| 7 | Final brand CTA and risk disclaimer |
+
+Trading and performance-related figures shown in the creative should be independently checked against current, approved company sources before reuse in a live campaign. The video includes a trading-risk disclaimer and is not investment advice.
+
+---
+
+## Technology Stack
 
 | Technology | Purpose |
 |---|---|
-| Python | Core development |
-| Hermes Agent | Agent orchestration and Kanban workflow |
-| OpenRouter | LLM provider |
-| DeepSeek V4 Flash | LLM used by Hermes agents |
+| Python | Core scripts and build helper |
+| Hermes Agent | Multi-agent orchestration and Kanban workflow |
+| OpenRouter | LLM gateway |
+| DeepSeek V4 Flash | LLM used during development |
 | Apify | Meta Ads Library data collection |
-| Tavily | Recent web research |
-| Pillow | Scene artwork and graphics |
-| MoviePy | Video composition |
-| NumPy | Image processing |
-| imageio-ffmpeg | FFmpeg distribution |
-| FFmpeg | Video encoding |
-| macOS `say` | Local voiceover generation |
-| Git / GitHub | Version control |
+| Tavily | Recent market and audience research |
+| OpenMontage | Video composition framework |
+| HyperFrames | HTML composition checking, preview, and rendering |
+| FFmpeg / FFprobe | Media processing, encoding, and verification |
+| Git / GitHub | Version control and project hosting |
 
 ---
 
-## Project Structure
+## Repository Structure
 
 ```text
 crowdwisdom-hermes/
-│
-├── agents/
-│   ├── ads_manager.py
-│   └── video_agent.py
-│
-├── data/
-│   ├── raw_ads.json
-│   ├── ads.json
-│   ├── storyboard.json
-│   └── final_ad.mp4
-│
-├── .env.example
-├── .gitignore
-├── README.md
-└── requirements.txt
+|
++-- agents/
+|   +-- ads_manager.py
+|   +-- video_agent.py
+|
++-- data/
+|   +-- raw_ads.json
+|   +-- ads.json
+|   +-- storyboard.json
+|   +-- final_ad.mp4
+|
++-- output/
+|   +-- crowdwisdom-trading-landscape.mp4
+|   +-- crowdwisdom-trading-vertical.mp4
+|
++-- scripts/
+|   +-- build_openmontage_atelier.py
+|
++-- templates/
+|   +-- atelier.html
+|
++-- third_party/
+|   +-- OpenMontage/              # Git submodule
+|
++-- .env.example
++-- .gitignore
++-- .gitmodules
++-- README.md
++-- requirements.txt
 ```
 
 ---
 
-# Installation
+## Installation
 
-## Requirements
+### Requirements
 
 - Python 3.11+
+- Node.js 22+
+- FFmpeg
 - Git
 - Hermes Agent
 - OpenRouter API key
 - Apify API token
 - Tavily API key
 
----
+OpenMontage is included as a Git submodule.
 
-## 1. Clone the repository
+### 1. Clone the repository
+
+Clone with submodules so the OpenMontage dependency is available:
 
 ```bash
-git clone https://github.com/Ronitparmar13/crowdwisdom-hermes.git
+git clone --recurse-submodules https://github.com/Ronitparmar13/crowdwisdom-hermes.git
 cd crowdwisdom-hermes
 ```
 
-## 2. Create a virtual environment
+If the repository was already cloned without submodules:
+
+```bash
+git submodule update --init --recursive
+```
+
+### 2. Create a Python virtual environment
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-## 3. Install dependencies
+### 3. Install Python dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## 4. Configure environment variables
+### 4. Configure environment variables
 
-Create the local environment file:
+Create your local environment file:
 
 ```bash
 cp .env.example .env
 ```
 
-Add your own credentials:
+Add your own credentials to `.env`:
 
 ```env
-OPENROUTER_API_KEY=your_openrouter_key
-APIFY_API_TOKEN=your_apify_token
-TAVILY_API_KEY=your_tavily_key
-
+OPENROUTER_API_KEY=your_openrouter_api_key
+APIFY_API_TOKEN=your_apify_api_token
+TAVILY_API_KEY=your_tavily_api_key
+EXA_API_KEY=your_exa_api_key
 OPENROUTER_MODEL=deepseek/deepseek-v4-flash-0731
 ```
 
-**Never commit `.env` to GitHub.**
+**Never commit `.env` or real API credentials to GitHub.**
 
 ---
 
-# Hermes Configuration
+## Hermes Setup
 
-Initialize the Hermes Kanban board:
+Initialize the Kanban board:
 
 ```bash
 hermes kanban init
@@ -166,13 +296,13 @@ Start the Hermes gateway:
 hermes gateway start
 ```
 
-Check the Kanban board:
+Inspect tasks:
 
 ```bash
 hermes kanban list
 ```
 
-The project uses separate Hermes profiles for the marketing workflow:
+Profiles used during development included:
 
 ```text
 default
@@ -180,96 +310,115 @@ script-agent2
 video-agent
 ```
 
+The agent workflow coordinates the research, scripting, and video-production stages.
+
 ---
 
-# Ads Manager Agent
+## Ads Manager Agent
 
-The Ads Manager is responsible for competitor advertisement research and analysis.
+### Input
 
-## Input
+Meta Ads Library data collected through Apify.
+
+### Outputs
 
 ```text
 data/raw_ads.json
-```
-
-## Processing
-
-The agent:
-
-- Filters trading-related advertisements.
-- Filters advertisements from the recent research window.
-- Removes duplicate advertisements.
-- Scores candidate advertisements.
-- Sends selected candidates to the LLM.
-- Extracts marketing insights and competitive patterns.
-
-## Output
-
-```text
 data/ads.json
 ```
 
-## Manual execution
+### Processing Pipeline
+
+```text
+Collect advertisements
+        |
+        v
+Filter trading relevance
+        |
+        v
+Filter recent research window
+        |
+        v
+Remove duplicates
+        |
+        v
+Select candidate ads
+        |
+        v
+LLM analysis
+        |
+        v
+Structured marketing insights
+```
+
+### Research Set
+
+The working research pipeline produced the following set:
+
+```text
+50 raw advertisements
+        |
+        v
+42 trading-relevant advertisements
+        |
+        v
+40 advertisements from the last 30 days
+        |
+        v
+40 unique advertisements
+        |
+        v
+12 selected candidates
+        |
+        v
+OpenRouter / DeepSeek analysis
+        |
+        v
+data/ads.json
+```
+
+These counts describe the collected working dataset, not independently verified ad performance.
+
+### Manual Execution
 
 ```bash
 python agents/ads_manager.py
 ```
 
-## Example pipeline
-
-```text
-50 raw advertisements
-        ↓
-42 trading-relevant advertisements
-        ↓
-40 advertisements from the last 30 days
-        ↓
-40 unique advertisements
-        ↓
-12 selected candidates
-        ↓
-OpenRouter / DeepSeek analysis
-        ↓
-data/ads.json
-```
-
 ---
 
-# Script Agent
+## Script Agent
 
-The Script Agent transforms the competitive research into a cinematic advertising concept.
-
-## Input
+### Input
 
 ```text
 data/ads.json
 ```
 
-## Research
+### Research
 
 Tavily is used to research:
 
-- Retail trader pain points
+- Retail-trader pain points
 - Trading audience behavior
 - Recent market context
 - Competitive positioning
 - Relevant current information
 
-## Output
+### Output
 
 ```text
 data/storyboard.json
 ```
 
-The storyboard contains:
+The storyboard includes:
 
-- Ideal Customer Profile
+- Target audience / ICP
 - Primary pain point
 - Research evidence
 - Creative concept
 - Visual hook
-- Scene structure
-- Scene timing
+- Scene structure and timing
 - Camera direction
 - Visual descriptions
 - Voiceover
@@ -277,149 +426,192 @@ The storyboard contains:
 - Sound design
 - CTA
 - Production notes
+- Risk/disclaimer notes
 
-The current storyboard defines a **42-second vertical cinematic advertisement**.
+The current production storyboard defines a **42-second advertisement**.
 
 ---
 
-# Video Agent
+## OpenMontage and HyperFrames Video Pipeline
 
-The Video Agent converts the approved storyboard into the final advertisement.
+The final production stage uses OpenMontage as a submodule and HyperFrames for HTML-based composition and rendering.
 
-## Input
+### Build the production workspaces
 
-```text
-data/storyboard.json
-```
-
-## Processing Pipeline
-
-```text
-Storyboard
-    ↓
-Scene generation
-    ↓
-Cinematic graphics
-    ↓
-Market-chart visualizations
-    ↓
-Camera motion / zoom
-    ↓
-On-screen captions
-    ↓
-Voiceover
-    ↓
-Video composition
-    ↓
-FFmpeg encoding
-    ↓
-data/final_ad.mp4
-```
-
-## Manual execution
+Run from the repository root:
 
 ```bash
-python agents/video_agent.py
+python scripts/build_openmontage_atelier.py
 ```
 
-## Final video specification
+The builder creates the local project under:
 
 ```text
-Duration:   42 seconds
-Resolution: 1080 × 1920
-Aspect:     9:16
-Codec:      H.264
-Frame rate: 24 FPS
-Format:     MP4
+third_party/OpenMontage/projects/crowdwisdom-trading-ad/
 ```
 
----
-
-# Hermes Kanban Workflow
-
-The three stages are coordinated using Hermes Kanban:
+It generates two separate HyperFrames workspaces:
 
 ```text
-┌─────────────────────────────────────┐
-│ Ads Manager Agent                   │
-│ Assignee: default                   │
-└────────────────┬────────────────────┘
-                 │
-                 ▼
-          data/ads.json
-                 │
-                 ▼
-┌─────────────────────────────────────┐
-│ Script Agent                        │
-│ Assignee: script-agent2             │
-└────────────────┬────────────────────┘
-                 │
-                 ▼
-       data/storyboard.json
-                 │
-                 ▼
-┌─────────────────────────────────────┐
-│ Video Agent                         │
-│ Assignee: video-agent               │
-└────────────────┬────────────────────┘
-                 │
-                 ▼
-        data/final_ad.mp4
+hyperframes/
++-- vertical/
+|   +-- index.html
+|   +-- hyperframes.json
+|   +-- DESIGN.md
+|   +-- STORYBOARD.md
+|   +-- assets/
+|   +-- renders/
+|
++-- landscape/
+    +-- index.html
+    +-- hyperframes.json
+    +-- DESIGN.md
+    +-- STORYBOARD.md
+    +-- assets/
+    +-- renders/
 ```
 
-Check task status:
+The builder copies storyboard/design artifacts and writes each composition from `templates/atelier.html`.
+
+When `data/final_ad.mp4` is present, the builder extracts its narration track into each workspace as `assets/narration.wav`.
+
+### Prepare OpenMontage
 
 ```bash
-hermes kanban list
+cd third_party/OpenMontage
+make setup
+cd ../..
 ```
 
-A completed workflow should show the three tasks as `done`.
+This prepares the OpenMontage / HyperFrames environment.
+
+HyperFrames requires Node.js 22+ and FFmpeg.
 
 ---
 
-# Validation
+## Validate the Compositions
 
-## Validate Ads Manager JSON
+### Vertical composition
+
+```bash
+cd third_party/OpenMontage/projects/crowdwisdom-trading-ad/hyperframes/vertical
+npx hyperframes check
+```
+
+### Landscape composition
+
+```bash
+cd ../landscape
+npx hyperframes check
+```
+
+The completed assessment compositions passed the HyperFrames layout, motion, and contrast checks. The checks reported non-blocking lint warnings about composition file size.
+
+---
+
+## Preview Before Rendering
+
+HyperFrames Studio can be used to visually inspect the timeline:
+
+```bash
+npx hyperframes preview
+```
+
+Review the composition before performing a delivery render.
+
+---
+
+## Render the Final Videos
+
+### Vertical 9:16
+
+From the vertical workspace:
+
+```bash
+npx hyperframes render --quality high --strict --output renders/crowdwisdom-trading-vertical.mp4
+```
+
+### Landscape 16:9
+
+From the landscape workspace:
+
+```bash
+npx hyperframes render --quality high --strict --output renders/crowdwisdom-trading-landscape.mp4
+```
+
+Copy the rendered files into the repository's `output/` directory.
+
+From the vertical workspace:
+
+```bash
+cp renders/crowdwisdom-trading-vertical.mp4 ../../../../../output/
+```
+
+From the landscape workspace:
+
+```bash
+cp renders/crowdwisdom-trading-landscape.mp4 ../../../../../output/
+```
+
+If you render from another working directory, adjust the destination path accordingly.
+
+---
+
+## Final Render Specifications
+
+| Output | Resolution | Aspect Ratio | Duration | Frame Rate | Video / Audio |
+|---|---:|---:|---:|---:|---|
+| Vertical | 1080 × 1920 | 9:16 | 42 sec | 30 FPS | H.264 / AAC |
+| Landscape | 1920 × 1080 | 16:9 | 42 sec | 30 FPS | H.264 / AAC |
+
+Both deliverables are MP4 files.
+
+---
+
+## Validate Data and Video
+
+### Validate JSON files
 
 ```bash
 python -m json.tool data/ads.json > /dev/null && echo "ads.json valid"
-```
-
-## Validate Storyboard JSON
-
-```bash
 python -m json.tool data/storyboard.json > /dev/null && echo "storyboard.json valid"
 ```
 
-## Check final video
+### Check that final videos exist
 
 ```bash
-ls -lh data/final_ad.mp4
+ls -lh output/crowdwisdom-trading-vertical.mp4
+ls -lh output/crowdwisdom-trading-landscape.mp4
 ```
 
-## Check video metadata
+### Check video metadata
 
 ```bash
-"$(python -c 'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())')" \
--i data/final_ad.mp4 2>&1 | grep -E "Duration|Video:"
+ffprobe -v error \
+  -show_entries format=duration,size \
+  -show_entries stream=codec_name,width,height,r_frame_rate,codec_type \
+  -of default=noprint_wrappers=1 \
+  output/crowdwisdom-trading-vertical.mp4
 ```
+
+Repeat with the landscape filename to inspect that render.
 
 ---
 
-# Data Sources
+## Data Sources
 
-## Apify / Meta Ads Library
+### Apify / Meta Ads Library
 
-The Ads Manager uses an Apify Meta Ads Library scraper to collect competitor advertisements.
+Apify is used to collect competitor advertisement data.
 
-The dataset contains fields such as:
+The research dataset contains fields including:
 
-- Advertisement ID
-- Page name
-- Advertisement copy
-- Headline
-- Call-to-action
-- Landing URL
+- Advertisement identifiers
+- Page information
+- Ad copy
+- Headlines
+- CTA information
+- Landing URLs
 - Media URLs
 - Impression information
 - Active status
@@ -427,164 +619,137 @@ The dataset contains fields such as:
 - Search query
 - Country
 
-## Tavily
+Stored outputs:
 
-Tavily is used by the Script Agent to research recent:
+```text
+data/raw_ads.json
+data/ads.json
+```
+
+### Tavily
+
+Tavily is used by the Script Agent for recent research involving:
 
 - Trading audience behavior
-- Retail trader pain points
-- Market sentiment
+- Retail-trader pain points
+- Market sentiment and context
 - Competitive trends
-- Current market context
+- Creative positioning
 
 ---
 
-# Creative Concept
+## Hermes Kanban Workflow
 
-The current advertisement is titled:
-
-## "Who's Right?"
-
-### Tagline
-
-> Every expert disagrees. The crowd already knows.
-
-The advertisement begins with contradictory market opinions:
+The three stages are coordinated through Hermes Kanban:
 
 ```text
-BUY
-SELL
-CRASH IMMINENT
-TO THE MOON
+Ads Manager Agent
+        |
+        v
+   data/ads.json
+        |
+        v
+Script Agent
+        |
+        v
+data/storyboard.json
+        |
+        v
+Video Production
+        |
+        v
+     output/
 ```
 
-The story then moves from information overload to a CrowdWisdom-focused solution.
-
-### Creative Arc
-
-```text
-Expert conflict
-      ↓
-Information overload
-      ↓
-Decision paralysis
-      ↓
-Wisdom of the crowd
-      ↓
-CrowdWisdom consensus
-      ↓
-Clearer decision
-      ↓
-Free weekly briefing CTA
-```
-
----
-
-# Video Scenes
-
-The current 42-second advertisement contains seven scenes:
-
-```text
-Scene 1 — Contradictory market opinions
-Scene 2 — Retail trader information overload
-Scene 3 — The market as a crowd
-Scene 4 — CrowdWisdom product reveal
-Scene 5 — From research to one decision
-Scene 6 — Collective signal / crowd visualization
-Scene 7 — Final CTA and brand card
-```
-
----
-
-# Security
-
-API credentials are kept outside the repository.
-
-Required environment variables:
-
-```env
-OPENROUTER_API_KEY=
-APIFY_API_TOKEN=
-TAVILY_API_KEY=
-EXA_API_KEY=
-OPENROUTER_MODEL=
-```
-
-The `.env` file is intentionally excluded from Git.
-
-Use `.env.example` as the configuration template.
-
----
-
-# Reproducing the Workflow
-
-Activate the environment:
+Inspect task status:
 
 ```bash
-source .venv/bin/activate
-```
-
-Run the Ads Manager:
-
-```bash
-python agents/ads_manager.py
-```
-
-Run the Script Agent through Hermes Kanban.
-
-Run the Video Agent:
-
-```bash
-python agents/video_agent.py
-```
-
-Or use Hermes Kanban to orchestrate the complete agent workflow:
-
-```bash
-hermes kanban init
-hermes gateway start
 hermes kanban list
 ```
 
 ---
 
-# Final Deliverables
+## Assessment Alignment
 
-| Deliverable | Location |
+| Assessment requirement | Implementation |
 |---|---|
-| Raw advertisement dataset | `data/raw_ads.json` |
-| Ads Manager analysis | `data/ads.json` |
-| Cinematic storyboard | `data/storyboard.json` |
-| Video Agent implementation | `agents/video_agent.py` |
-| Final advertisement | `data/final_ad.mp4` |
+| Hermes agent team | Hermes Kanban and agent profiles |
+| Ads Manager | `agents/ads_manager.py` and Apify research |
+| Recent competitor-ad research | Meta Ads Library dataset and recent-window filtering |
+| Marketing/pain/concept extraction | `data/ads.json` |
+| Script Agent | Hermes Script Agent and Tavily research |
+| ICP and pain-point research | Tavily-backed research workflow |
+| Human-readable storyboard | `data/storyboard.json` |
+| 30–60 second advertisement | 42-second creative |
+| Video production | OpenMontage + HyperFrames |
+| Final delivery | Native vertical and landscape MP4 outputs |
 
 ---
 
-# Assessment Alignment
+## Final Deliverables
 
-This project implements the requested three-stage marketing workflow:
+| Deliverable | Repository location |
+|---|---|
+| Raw competitor-ad research | `data/raw_ads.json` |
+| Ads Manager analysis | `data/ads.json` |
+| Script/storyboard | `data/storyboard.json` |
+| Earlier procedural video-agent prototype | `agents/video_agent.py` |
+| OpenMontage build helper | `scripts/build_openmontage_atelier.py` |
+| Atelier HTML template | `templates/atelier.html` |
+| Vertical final advertisement | `output/crowdwisdom-trading-vertical.mp4` |
+| Landscape final advertisement | `output/crowdwisdom-trading-landscape.mp4` |
+| OpenMontage dependency | `third_party/OpenMontage` |
 
-```text
-Ads Manager Agent
-       ↓
-Script Agent
-       ↓
-Video Agent
+---
+
+## Quick Start for Reviewers
+
+Clone the repository and its submodule:
+
+```bash
+git clone --recurse-submodules https://github.com/Ronitparmar13/crowdwisdom-hermes.git
+cd crowdwisdom-hermes
 ```
 
-The pipeline combines:
+Set up Python:
 
-- **Apify** for competitor advertisement research
-- **Tavily** for recent trading and audience research
-- **Hermes Agent** for agent orchestration
-- **OpenRouter / DeepSeek** for language-model reasoning
-- **Python + Pillow + MoviePy + FFmpeg** for final video production
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 
-The final advertisement is a **42-second vertical cinematic video** designed for social-media formats.
+Configure credentials:
+
+```bash
+cp .env.example .env
+```
+
+Build the local OpenMontage workspaces:
+
+```bash
+python scripts/build_openmontage_atelier.py
+```
+
+The already-rendered assessment videos are available in:
+
+```text
+output/
+```
 
 ---
 
-# Author
+## Security
+
+- Keep real credentials in the local `.env` file only.
+- Use `.env.example` as a placeholder template.
+- Do not paste API keys into source files, README, issues, or commits.
+- If a credential is exposed, revoke or rotate it with its provider.
+- Do not commit private environment files.
+
+---
+
+## Author
 
 **Ronit Parmar**
 
@@ -596,6 +761,8 @@ https://github.com/Ronitparmar13/crowdwisdom-hermes
 
 ---
 
-# License
+## Internship Assessment
 
-This project was created as part of an internship assessment for CrowdWisdom Trading.
+Prepared for the **CrowdWisdom Trading Hermes AI Marketing Agent assessment**.
+
+This repository contains the research artifacts, storyboard, build helper and template, OpenMontage submodule reference, and final rendered video outputs.
