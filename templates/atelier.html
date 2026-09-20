@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>CrowdWisdom Trading — __FORMAT__ atelier</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; background:#000; overflow:hidden; }
+    body { font-family: Inter, Arial, sans-serif; }
+
+    .root {
+      position:relative; width:__WIDTH__px; height:__HEIGHT__px; overflow:hidden;
+      background:#060A12; color:#F5F7FA;
+      --ink:#060A12; --slate:#101827; --white:#F5F7FA; --muted:#9BA7B7;
+      --cyan:#51E5FF; --green:#31E58B; --red:#FF5563; --gold:#F5C15F;
+    }
+    .scene { position:absolute; inset:0; opacity:0; overflow:hidden; background:var(--ink); }
+    .grain {
+      position:absolute; inset:-20%;
+      background:
+        radial-gradient(circle at 25% 20%, rgba(81,229,255,.09), transparent 28%),
+        radial-gradient(circle at 80% 72%, rgba(49,229,139,.06), transparent 32%),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.022) 0 1px, transparent 1px 4px);
+      mix-blend-mode:screen; pointer-events:none;
+    }
+    .vignette { position:absolute; inset:0; background:radial-gradient(circle, transparent 36%, rgba(0,0,0,.78) 100%); pointer-events:none; }
+    .headline { font-weight:900; letter-spacing:-.05em; line-height:.9; }
+    .mono { font-family:"JetBrains Mono", monospace; letter-spacing:.08em; text-transform:uppercase; }
+    .center { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
+    .safe { width:86%; max-width:1560px; }
+    .micro { font-size:clamp(16px,1.3vw,24px); color:var(--muted); }
+    .pill {
+      display:inline-flex; align-items:center; gap:10px; padding:12px 18px;
+      border:1px solid rgba(255,255,255,.14); border-radius:999px;
+      background:rgba(8,12,20,.62); backdrop-filter:blur(10px);
+      font-size:clamp(14px,1.15vw,21px);
+    }
+
+    .impact-grid { display:grid; gap:18px; width:90%; max-width:1500px; grid-template-columns:repeat(4,1fr); }
+    .impact-card {
+      min-height:170px; border-radius:28px; padding:28px;
+      display:flex; align-items:center; justify-content:center; text-align:center;
+      background:linear-gradient(145deg,#111a2a,#0a0f19);
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:0 30px 90px rgba(0,0,0,.34);
+      font-size:clamp(32px,4.2vw,76px); font-weight:900;
+    }
+    .impact-card.buy { color:var(--green); }
+    .impact-card.sell { color:var(--red); }
+    .impact-card.crash { color:#ff8791; }
+    .impact-card.moon { color:var(--gold); }
+    .chaos-copy { position:absolute; left:50%; top:84%; transform:translateX(-50%); font-size:clamp(34px,5vw,86px); font-weight:900; white-space:nowrap; }
+
+    .desk { position:absolute; left:7%; right:7%; bottom:12%; height:25%; background:linear-gradient(#1a1720,#0d0c10); border-top:2px solid #242636; }
+    .screens { position:absolute; left:6%; right:6%; top:14%; display:grid; grid-template-columns:1.1fr .9fr 1fr; gap:16px; }
+    .screen { height:clamp(270px,31vh,620px); padding:18px; border-radius:20px; background:#07101c; border:1px solid #223249; box-shadow:0 18px 60px rgba(0,0,0,.42); }
+    .screen-head { display:flex; justify-content:space-between; color:#6f7f95; font-size:13px; }
+    .chart {
+      height:82%; margin-top:18px; border-radius:12px; position:relative; overflow:hidden;
+      background:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size:20% 20%;
+    }
+    .chart:after {
+      content:""; position:absolute; left:7%; right:5%; top:54%; height:5px;
+      background:linear-gradient(90deg,#51E5FF,#31E58B,#FF5563); border-radius:99px;
+      transform:skewY(-12deg) rotate(-1deg); box-shadow:0 0 18px rgba(81,229,255,.4);
+    }
+    .alerts { position:absolute; right:5%; top:21%; display:grid; gap:12px; width:25%; }
+    .alert { padding:14px 16px; border:1px solid rgba(255,85,99,.45); color:#ff98a0; background:rgba(80,15,22,.55); border-radius:16px; font-size:clamp(14px,1.2vw,20px); }
+    .trader { position:absolute; left:50%; bottom:4%; width:28%; height:30%; transform:translateX(-50%); }
+    .head { position:absolute; left:50%; top:5%; width:20%; aspect-ratio:1; transform:translateX(-50%); border-radius:50%; background:#05070b; }
+    .body { position:absolute; left:50%; bottom:0; width:56%; height:72%; transform:translateX(-50%); border-radius:45% 45% 8% 8%; background:#05070b; }
+    .phone { position:absolute; right:8%; bottom:18%; width:16%; aspect-ratio:9/16; border:2px solid #5c6370; border-radius:26px; background:#0e1420; box-shadow:0 18px 50px rgba(0,0,0,.5); padding:18px; }
+    .stack { display:flex; flex-direction:column; gap:8px; }
+
+    .crowd-field { position:absolute; inset:0; }
+    .node { position:absolute; width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 18px rgba(81,229,255,.6); opacity:.45; }
+    .node:nth-child(3n) { background:var(--green); }
+    .node:nth-child(4n) { background:#8fe8ff; }
+    .orbit { position:absolute; left:50%; top:50%; width:62%; aspect-ratio:1; transform:translate(-50%,-50%) rotate(-8deg); border:1px solid rgba(81,229,255,.16); border-radius:50%; box-shadow:0 0 80px rgba(81,229,255,.08) inset; }
+    .orbit.two { width:43%; transform:translate(-50%,-50%) rotate(22deg) scaleY(.68); }
+    .ticker { position:absolute; left:50%; top:49%; transform:translate(-50%,-50%); padding:34px 44px; border-radius:32px; background:rgba(8,13,23,.82); border:1px solid rgba(81,229,255,.32); box-shadow:0 30px 100px rgba(0,0,0,.42); text-align:center; min-width:46%; }
+    .ticker .big { font-size:clamp(44px,6.5vw,106px); font-weight:900; color:#ff6975; letter-spacing:-.06em; }
+    .ticker-bar { height:18px; border-radius:99px; background:#182132; overflow:hidden; margin-top:18px; }
+    .ticker-bar > i { display:block; width:66.7%; height:100%; background:linear-gradient(90deg,#ff5464,#ff8f98); transform:scaleX(0); transform-origin:left center; }
+
+    .product-wrap { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+    .product { width:72%; max-width:1320px; padding:34px; border-radius:36px; background:linear-gradient(145deg,#f8fafc,#e9eff5); color:#142237; box-shadow:0 50px 140px rgba(0,0,0,.48); position:relative; }
+    .brand { font-size:clamp(26px,2vw,36px); font-weight:900; letter-spacing:-.03em; }
+    .product-title { margin-top:22px; font-size:clamp(32px,3vw,58px); font-weight:800; }
+    .metric-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:30px; }
+    .metric { padding:20px; background:#dfe7ef; border-radius:20px; }
+    .metric label { display:block; color:#6a798b; font-size:clamp(14px,1.2vw,20px); font-weight:700; }
+    .metric strong { display:block; margin-top:8px; font-size:clamp(24px,2.2vw,42px); }
+    .track { margin-top:18px; font-size:clamp(14px,1.15vw,19px); color:#617286; }
+    .signal-sweep { position:absolute; left:-25%; top:0; width:20%; height:100%; background:linear-gradient(90deg,transparent,rgba(81,229,255,.55),transparent); filter:blur(16px); transform:skewX(-12deg); }
+
+    .morning { position:absolute; inset:0; background:radial-gradient(circle at 80% 20%, rgba(245,193,95,.22), transparent 28%), linear-gradient(140deg,#172131 0%,#0b131f 55%,#11100f 100%); }
+    .window { position:absolute; right:8%; top:10%; width:28%; height:55%; background:linear-gradient(135deg,rgba(220,238,255,.12),rgba(245,193,95,.18)); border:1px solid rgba(255,255,255,.16); border-radius:28px; box-shadow:0 30px 80px rgba(0,0,0,.28); }
+    .calm-card { position:absolute; left:10%; top:24%; width:42%; min-height:34%; border-radius:30px; padding:34px; background:rgba(8,14,22,.75); border:1px solid rgba(81,229,255,.22); backdrop-filter:blur(14px); }
+    .calm-card .line { display:flex; justify-content:space-between; margin:20px 0; color:#bdc7d2; }
+    .calm-card .value { color:var(--green); font-weight:900; }
+
+    .network { position:absolute; inset:0; }
+    .network-center { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:150px; height:150px; border-radius:50%; background:radial-gradient(circle,#f5f7fa 0 8%,#51e5ff 10% 18%,rgba(81,229,255,.1) 65%); box-shadow:0 0 100px rgba(81,229,255,.4); }
+    .network-line { position:absolute; left:50%; top:50%; width:32%; height:2px; transform-origin:left center; background:linear-gradient(90deg,rgba(81,229,255,.8),transparent); opacity:.45; }
+
+    .cta { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; background:radial-gradient(circle at 50% 35%, rgba(81,229,255,.12), transparent 34%), #060A12; }
+    .logo { font-size:clamp(44px,5.8vw,108px); font-weight:900; letter-spacing:-.06em; }
+    .cta-copy { margin-top:22px; color:var(--cyan); font-size:clamp(24px,2.5vw,44px); font-weight:800; }
+    .button { margin-top:38px; padding:22px 40px; border-radius:999px; background:var(--green); color:#06100c; font-size:clamp(18px,1.8vw,30px); font-weight:900; box-shadow:0 18px 60px rgba(49,229,139,.22); }
+    .risk { margin-top:34px; color:#8995a5; font-size:clamp(14px,1.2vw,20px); max-width:780px; line-height:1.45; }
+
+    .root[data-format="portrait"] .impact-grid { grid-template-columns:repeat(2,1fr); width:82%; }
+    .root[data-format="portrait"] .impact-card { min-height:210px; }
+    .root[data-format="portrait"] .product { width:82%; }
+    .root[data-format="landscape"] .impact-grid { grid-template-columns:repeat(4,1fr); width:90%; }
+    .root[data-format="landscape"] .product { width:72%; }
+  </style>
+</head>
+<body>
+  <div id="__CID__" class="root" data-composition-id="__CID__" data-width="__WIDTH__" data-height="__HEIGHT__" data-duration="42" data-format="__FORMAT__">
+    <div id="scene-1" class="scene">
+      <div class="impact-grid center" style="top:43%;">
+        <div class="impact-card buy">BUY</div>
+        <div class="impact-card sell">SELL</div>
+        <div class="impact-card crash">CRASH IMMINENT</div>
+        <div class="impact-card moon">TO THE MOON</div>
+      </div>
+      <div id="who-right" class="chaos-copy">WHO'S RIGHT?</div>
+      <div class="grain"></div><div class="vignette"></div>
+    </div>
+
+    <div id="scene-2" class="scene">
+      <div class="screens">
+        <div class="screen"><div class="screen-head"><span>MARKET</span><span>00:47:12</span></div><div class="chart"></div></div>
+        <div class="screen"><div class="screen-head"><span>NEWS</span><span>LIVE</span></div><div class="chart"></div></div>
+        <div class="screen"><div class="screen-head"><span>SIGNALS</span><span>14</span></div><div class="chart"></div></div>
+      </div>
+      <div class="alerts">
+        <div class="alert">BUY?</div><div class="alert">SELL?</div><div class="alert">CRASH?</div><div class="alert">14 UNREAD</div>
+      </div>
+      <div class="trader"><div class="head"></div><div class="body"></div></div>
+      <div class="phone"><div class="mono micro stack"><span>01:07</span><span>14 alerts</span></div></div>
+      <div class="desk"></div>
+      <div class="center safe" style="top:12%;"><div class="pill mono">3 research tools · 1 signal group · 0 decisions</div></div>
+      <div class="grain"></div><div class="vignette"></div>
+    </div>
+
+    <div id="scene-3" class="scene">
+      <div class="crowd-field">__NODES__</div>
+      <div class="orbit"></div><div class="orbit two"></div>
+      <div class="ticker">
+        <div class="mono micro" style="color:#7ac9da;">LIVE SENTIMENT</div>
+        <div class="big">66.7%</div>
+        <div class="headline" style="font-size:clamp(24px,2.8vw,50px);">BEARISH</div>
+        <div class="ticker-bar"><i></i></div>
+        <div class="micro" style="margin-top:14px;">1-YEAR HIGH · AAII · WK OF 9/10/2026</div>
+      </div>
+      <div class="center safe" style="top:87%; text-align:center;">
+        <div class="hero-small headline">ONE OPINION IS STILL ONE OPINION.</div>
+      </div>
+      <div class="grain"></div><div class="vignette"></div>
+    </div>
+
+    <div id="scene-4" class="scene">
+      <div class="product-wrap">
+        <div id="product" class="product">
+          <div class="brand">CROWDWISDOM</div>
+          <div class="product-title">WEEKLY CONSENSUS</div>
+          <div class="metric-grid">
+            <div class="metric"><label>ENTRY</label><strong>$612.40</strong></div>
+            <div class="metric"><label>STOP</label><strong>$584.10</strong></div>
+            <div class="metric"><label>TARGET</label><strong>$674.80</strong></div>
+          </div>
+          <div class="track mono">weighted by historical accuracy · public track record</div>
+          <div class="pill" style="margin-top:20px;color:#173a2a;border-color:#8fe3bd;background:#eefaf4;">2,000+ VERIFIED PROFESSIONALS</div>
+          <div class="signal-sweep"></div>
+        </div>
+      </div>
+      <div class="center safe" style="top:87%; text-align:center;">
+        <div class="headline" style="font-size:clamp(30px,3.8vw,70px);">ENTRY · STOP · TARGET</div>
+      </div>
+      <div class="grain"></div><div class="vignette"></div>
+    </div>
+
+    <div id="scene-5" class="scene">
+      <div class="morning"></div>
+      <div class="window"></div>
+      <div class="calm-card">
+        <div class="mono micro" style="color:#94a6bb;">MONDAY 08:12</div>
+        <div class="headline" style="font-size:clamp(34px,3.6vw,68px);margin-top:14px;">DECISION IN HAND.</div>
+        <div class="line"><span>Consensus</span><span class="value">READY</span></div>
+        <div class="line"><span>Research time</span><span class="value">8 MIN</span></div>
+        <div class="line"><span>Signal</span><span class="value">CLEAR</span></div>
+      </div>
+      <div class="center safe" style="top:84%;">
+        <div class="headline" style="font-size:clamp(34px,4.4vw,78px);">FROM RESEARCH TO ONE DECISION.</div>
+      </div>
+      <div class="grain"></div><div class="vignette"></div>
+    </div>
+
+    <div id="scene-6" class="scene">
+      <div class="network">__LINES__</div>
+      <div class="crowd-field">__NODES__</div>
+      <div class="network-center"></div>
+      <div class="center safe" style="top:83%; text-align:center;">
+        <div class="headline" style="font-size:clamp(34px,4.8vw,86px);">READ THE CROWD.</div>
+        <div class="hero-small" style="margin-top:16px;color:#a7d9e1;">What 2,000+ professionals are seeing that you aren't.</div>
+      </div>
+      <div class="grain"></div><div class="vignette"></div>
+    </div>
+
+    <div id="scene-7" class="scene">
+      <div class="cta">
+        <div class="logo">CROWDWISDOM</div>
+        <div class="cta-copy">Stop trading blind.</div>
+        <div class="button">GET MY FIRST DECISION</div>
+        <div class="risk stack"><span>Free weekly market briefing · no credit card required.</span><span>Trading involves substantial risk. Not investment advice.</span></div>
+      </div>
+      <div class="grain"></div><div class="vignette"></div>
+    </div>
+
+    <audio id="narration" class="clip" src="assets/narration.wav" data-start="0" data-duration="42" data-track-index="10" data-volume="1"></audio>
+
+    <script>
+      (function () {
+        var tl = gsap.timeline({ paused: true });
+        window.__timelines = window.__timelines || {};
+        var s1 = document.getElementById("scene-1"), s2 = document.getElementById("scene-2"), s3 = document.getElementById("scene-3");
+        var s4 = document.getElementById("scene-4"), s5 = document.getElementById("scene-5"), s6 = document.getElementById("scene-6"), s7 = document.getElementById("scene-7");
+
+        // Scene 1: impact / expert conflict
+        tl.to(s1,{opacity:1,duration:.25},0);
+        tl.fromTo("#scene-1 .impact-card",{y:90,scale:.82,opacity:0},{y:0,scale:1,opacity:1,duration:.28,stagger:.42,ease:"back.out(1.6)"},.05);
+        tl.fromTo("#who-right",{y:24,scale:.94,opacity:0},{y:0,scale:1,opacity:1,duration:.38,ease:"power3.out"},2.95);
+        tl.to("#scene-1 .impact-card",{x:10,duration:.12,repeat:3,yoyo:true,ease:"power1.inOut"},2.2);
+        tl.to(s1,{opacity:0,duration:.35,ease:"power2.inOut"},3.72);
+
+        // Scene 2: information overload
+        tl.to(s2,{opacity:1,duration:.35},3.75);
+        tl.fromTo("#scene-2 .screens",{scale:1.06,y:24,opacity:.3},{scale:1,y:0,opacity:1,duration:1.1,ease:"power2.out"},3.8);
+        tl.fromTo("#scene-2 .alerts .alert",{x:70,opacity:0},{x:0,opacity:1,duration:.42,stagger:.5,ease:"power2.out"},4.4);
+        tl.to("#scene-2 .screens",{scale:1.03,y:-16,duration:4.9,ease:"sine.inOut"},5);
+        tl.to("#scene-2 .phone",{y:-14,duration:1.5,repeat:2,yoyo:true,ease:"sine.inOut"},5.2);
+        tl.to(s2,{opacity:0,duration:.4,ease:"power2.inOut"},10.62);
+
+        // Scene 3: pull back into the crowd
+        tl.to(s3,{opacity:1,duration:.35},10.65);
+        tl.fromTo("#scene-3 .crowd-field",{scale:.82,opacity:.15},{scale:1,opacity:1,duration:1.6,ease:"power2.out"},10.7);
+        tl.to("#scene-3 .orbit",{rotation:18,scale:1.06,duration:5.8,ease:"sine.inOut"},11);
+        tl.to("#scene-3 .orbit.two",{rotation:-20,scale:.94,duration:5.8,ease:"sine.inOut"},11);
+        tl.fromTo("#scene-3 .ticker",{scale:.82,opacity:0,y:40},{scale:1,opacity:1,y:0,duration:.8,ease:"back.out(1.4)"},12.1);
+        tl.fromTo("#scene-3 .ticker-bar > i",{scaleX:0},{scaleX:1,duration:1.4,ease:"power2.out"},12.6);
+        tl.to("#scene-3 .node",{y:-12,duration:2.2,stagger:.06,repeat:2,yoyo:true,ease:"sine.inOut"},13);
+        tl.to(s3,{opacity:0,duration:.4,ease:"power2.inOut"},17.78);
+
+        // Scene 4: product reveal
+        tl.to(s4,{opacity:1,duration:.35},17.8);
+        tl.fromTo("#product",{scale:.82,y:70,opacity:0,rotation:-2},{scale:1,y:0,opacity:1,rotation:0,duration:1,ease:"back.out(1.3)"},17.85);
+        tl.fromTo("#scene-4 .metric",{y:24,opacity:0},{y:0,opacity:1,duration:.45,stagger:.18,ease:"power2.out"},18.7);
+        tl.to("#product",{y:-12,duration:3.8,ease:"sine.inOut"},20);
+        tl.to("#scene-4 .signal-sweep",{x:1700,duration:1.35,ease:"power2.inOut"},20.6);
+        tl.fromTo("#scene-4 .pill",{scale:.9,opacity:.2},{scale:1,opacity:1,duration:.55,ease:"power2.out"},21);
+        tl.to(s4,{opacity:0,duration:.4,ease:"power2.inOut"},26.78);
+
+        // Scene 5: warm resolution
+        tl.to(s5,{opacity:1,duration:.35},26.8);
+        tl.fromTo("#scene-5 .window",{x:60,opacity:0},{x:0,opacity:1,duration:1.2,ease:"power2.out"},26.9);
+        tl.fromTo("#scene-5 .calm-card",{x:-60,opacity:0},{x:0,opacity:1,duration:.9,ease:"power2.out"},27);
+        tl.to("#scene-5 .calm-card",{y:-10,duration:4,ease:"sine.inOut"},28);
+        tl.to(s5,{opacity:0,duration:.4,ease:"power2.inOut"},33.78);
+
+        // Scene 6: network / collective signal
+        tl.to(s6,{opacity:1,duration:.35},33.8);
+        tl.fromTo("#scene-6 .network-center",{scale:.55,opacity:0},{scale:1,opacity:1,duration:.9,ease:"back.out(1.5)"},33.85);
+        tl.fromTo("#scene-6 .node",{scale:.3,opacity:0},{scale:1,opacity:.55,duration:.6,stagger:.04,ease:"power2.out"},34.15);
+        tl.to("#scene-6 .network-center",{scale:1.08,duration:3.6,ease:"sine.inOut"},35);
+        tl.to("#scene-6 .network-line",{opacity:.78,duration:1.7,stagger:.05,ease:"power2.out"},34.7);
+        tl.to(s6,{opacity:0,duration:.4,ease:"power2.inOut"},38.72);
+
+        // Scene 7: CTA
+        tl.to(s7,{opacity:1,duration:.35},38.75);
+        tl.fromTo("#scene-7 .logo",{y:28,opacity:0,scale:.96},{y:0,opacity:1,scale:1,duration:.65,ease:"power3.out"},38.8);
+        tl.fromTo("#scene-7 .cta-copy",{y:18,opacity:0},{y:0,opacity:1,duration:.5,ease:"power2.out"},39.2);
+        tl.fromTo("#scene-7 .button",{y:22,opacity:0,scale:.95},{y:0,opacity:1,scale:1,duration:.5,ease:"back.out(1.4)"},39.55);
+        tl.fromTo("#scene-7 .risk",{opacity:0},{opacity:1,duration:.45,ease:"power2.out"},40.1);
+        tl.to("#scene-7 .button",{scale:1.025,duration:1.15,yoyo:true,repeat:1,ease:"sine.inOut"},40.55);
+
+        window.__timelines["__CID__"] = tl;
+      })();
+    </script>
+  </div>
+</body>
+</html>
